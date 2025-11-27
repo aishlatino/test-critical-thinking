@@ -26,6 +26,15 @@ const App = () => {
   const feedbackSection2Ref = useRef(null);
   const bottomRef = useRef(null);
 
+  // --- Progress Calculation ---
+  const totalSteps = 4;
+  let completedSteps = 0;
+  if (al1Response) completedSteps++;
+  if (al2Submitted) completedSteps++;
+  if (review1Response !== null) completedSteps++;
+  if (review2Response !== null) completedSteps++;
+  const progress = (completedSteps / totalSteps) * 100;
+
   // --- Handlers ---
   const handleAl2Toggle = (index) => {
     if (al2Submitted) return;
@@ -73,10 +82,22 @@ const App = () => {
       
       {/* Main Container "Pop-up" Card */}
       {/* Square corners on mobile (rounded-none), rounded on desktop */}
-      <div className="w-full max-w-2xl min-h-screen md:min-h-0 rounded-none md:rounded-3xl shadow-2xl overflow-hidden animate-fade-in-up" style={{ backgroundColor: COLORS.grey }}>
+      <div className="w-full max-w-2xl min-h-screen md:min-h-0 rounded-none md:rounded-3xl shadow-2xl overflow-hidden animate-fade-in-up relative" style={{ backgroundColor: COLORS.grey }}>
         
+        {/* Progress Bar */}
+        <div className="absolute top-0 left-0 w-full h-2 bg-black/20 z-20">
+          <div 
+            className="h-full transition-all duration-500 ease-out"
+            style={{ 
+              width: `${progress}%`,
+              backgroundColor: COLORS.neonTeal,
+              boxShadow: `0 0 10px ${COLORS.neonTeal}`
+            }}
+          />
+        </div>
+
         {/* Header - H1 Size */}
-        <header className="p-6 md:p-8 pb-4">
+        <header className="p-6 md:p-8 pb-4 mt-2">
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-2 leading-tight" style={{ color: COLORS.neonTeal }}>
             Introducing Independent <br/>
             <span style={{ color: 'white' }}>And Critical Thinking</span>
@@ -111,10 +132,10 @@ const App = () => {
               <h2 className="text-3xl md:text-4xl font-bold">Question 1</h2>
             </div>
             
-            {/* Paragraph - H3 Size */}
-            <p className="text-2xl md:text-3xl leading-relaxed text-gray-200">
+            {/* Paragraph - H3 Tag */}
+            <h3 className="text-2xl md:text-3xl leading-relaxed text-gray-200 font-normal">
               If you were the student in the video, would you report the smoke or continue taking the survey?
-            </p>
+            </h3>
 
             <div className="grid grid-cols-1 gap-4 mt-6">
               <button 
@@ -151,32 +172,32 @@ const App = () => {
               className="animate-fade-in space-y-8 bg-black/20 p-6 md:p-8 rounded-2xl border-l-8" 
               style={{ borderColor: COLORS.orange }}
             >
-              <p className="font-bold text-2xl md:text-3xl">
+              <h3 className="font-bold text-2xl md:text-3xl">
                 Don’t be surprised, but the actual answer isn’t so simple.
-              </p>
+              </h3>
               
-              <p className="leading-relaxed opacity-90 text-2xl md:text-3xl">
+              <h3 className="leading-relaxed opacity-90 text-2xl md:text-3xl font-normal">
                 According to a famous study known as the Smoke Filled Room Experiment, your response would depend on a) whether or not you are alone in the room and b) assuming you’re not alone, whether or not the other participants are also wondering what to do.
-              </p>
+              </h3>
               
               <div className="space-y-4 pl-2 md:pl-4 text-2xl md:text-3xl">
-                <p className="text-lg md:text-xl uppercase tracking-wider font-bold" style={{ color: COLORS.mutedTeal }}>In the original experiment:</p>
+                <h3 className="text-lg md:text-xl uppercase tracking-wider font-bold" style={{ color: COLORS.mutedTeal }}>In the original experiment:</h3>
                 <ul className="list-disc pl-6 space-y-3 opacity-90">
-                  <li>When alone in the room, 75% of participants reported smoke</li>
-                  <li>When seated with two other participants, 38% reported smoke</li>
-                  <li>When seated with two people the researchers instructed not to respond, only 10% reported smoke</li>
+                  <li><h3 className="font-normal text-2xl md:text-3xl">When alone in the room, 75% of participants reported smoke</h3></li>
+                  <li><h3 className="font-normal text-2xl md:text-3xl">When seated with two other participants, 38% reported smoke</h3></li>
+                  <li><h3 className="font-normal text-2xl md:text-3xl">When seated with two people the researchers instructed not to respond, only 10% reported smoke</h3></li>
                 </ul>
               </div>
 
-              <p className="leading-relaxed opacity-90 text-2xl md:text-3xl">
+              <h3 className="leading-relaxed opacity-90 text-2xl md:text-3xl font-normal">
                 Those findings demonstrate that most people need social proof, they look to others when deciding how to interpret a situation; and that leads to a diffusion of responsibility, meaning they won’t act before someone else does (also called “Bystander Effect”).
-              </p>
-              <p className="font-bold text-2xl md:text-3xl" style={{ color: COLORS.orange }}>
+              </h3>
+              <h3 className="font-bold text-2xl md:text-3xl" style={{ color: COLORS.orange }}>
                 That doesn’t bode well for independent thinking.
-              </p>
-              <p className="leading-relaxed opacity-90 text-2xl md:text-3xl">
+              </h3>
+              <h3 className="leading-relaxed opacity-90 text-2xl md:text-3xl font-normal">
                 Independent thinking is the ability to form your own ideas as opposed to adopting the views of others, and, as you will learn later in this unit, is intrinsic to living a Jewish life.
-              </p>
+              </h3>
             </section>
           )}
 
@@ -190,10 +211,10 @@ const App = () => {
                 <h2 className="text-3xl md:text-4xl font-bold">Question 2</h2>
               </div>
               
-              <p className="text-2xl md:text-3xl leading-relaxed text-gray-200">
+              <h3 className="text-2xl md:text-3xl leading-relaxed text-gray-200 font-normal">
                 Even if you’re an independent thinker, how do you know you’re right? <br/>
                 <span className="text-xl opacity-60 font-normal block mt-2">[Choose all that apply]</span>
-              </p>
+              </h3>
 
               <div className="space-y-4 mt-6">
                 {[
@@ -270,32 +291,32 @@ const App = () => {
               ) : (
                 <div ref={feedbackSection2Ref} className="mt-8 animate-fade-in">
                   <div className="bg-black/20 p-6 md:p-8 rounded-2xl border-l-8 space-y-6" style={{ borderColor: COLORS.neonTeal }}>
-                    <p className="font-bold text-2xl md:text-3xl">
+                    <h3 className="font-bold text-2xl md:text-3xl">
                       If you chose answers A, B, or C, you’re on the right track, as opposed to D, which is maybe just a testament to your rebellious nature (not necessarily a bad thing, but also not necessarily an indicator of truthfulness).
-                    </p>
-                    <p className="leading-relaxed opacity-90 text-2xl md:text-3xl">
+                    </h3>
+                    <h3 className="leading-relaxed opacity-90 text-2xl md:text-3xl font-normal">
                       The point here is that in addition to being an independent thinker, you also want to be a critical thinker.
-                    </p>
+                    </h3>
                     <div className="p-6 rounded-xl bg-white/5 border border-white/10">
-                      <p className="font-bold mb-3 text-2xl md:text-3xl" style={{ color: COLORS.mutedTeal }}>Critical Thinking</p>
-                      <p className="text-2xl md:text-3xl opacity-80">
+                      <h3 className="font-bold mb-3 text-2xl md:text-3xl" style={{ color: COLORS.mutedTeal }}>Critical Thinking</h3>
+                      <h3 className="text-2xl md:text-3xl opacity-80 font-normal">
                         The ability to analyze ideas, claims, and information; to evaluate evidence, spot assumptions, and test logic. You judge the veracity of whatever it is you’re examining.
-                      </p>
+                      </h3>
                     </div>
-                    <p className="leading-relaxed opacity-90 text-2xl md:text-3xl">
+                    <h3 className="leading-relaxed opacity-90 text-2xl md:text-3xl font-normal">
                       With that in mind, in this unit, you will learn that, as a Jew, you are expected to be both an independent and critical thinker. That means:
-                    </p>
+                    </h3>
                     <ul className="list-disc pl-6 space-y-3 opacity-90 text-2xl md:text-3xl">
-                      <li>Being comfortable asking uncomfortable questions</li>
-                      <li>Being independent-minded</li>
-                      <li>Gathering evidence, taking logical steps, and coming to conclusions on your own</li>
+                      <li><h3 className="font-normal text-2xl md:text-3xl">Being comfortable asking uncomfortable questions</h3></li>
+                      <li><h3 className="font-normal text-2xl md:text-3xl">Being independent-minded</h3></li>
+                      <li><h3 className="font-normal text-2xl md:text-3xl">Gathering evidence, taking logical steps, and coming to conclusions on your own</h3></li>
                     </ul>
                   </div>
                   
                   <div className="mt-10 p-6 md:p-8 bg-gradient-to-br from-white/5 to-transparent rounded-2xl border border-white/5">
-                     <p className="mb-6 text-2xl md:text-3xl">
+                     <h3 className="mb-6 text-2xl md:text-3xl font-normal">
                        Both independent and critical thinking have starring roles in Jewish scholarship and tradition, and in this unit you will discover that those ways of thinking are:
-                     </p>
+                     </h3>
                      <ul className="space-y-4 text-2xl md:text-3xl opacity-80">
                         {[
                           "The point of the first of the Ten Commandments",
@@ -306,15 +327,15 @@ const App = () => {
                         ].map((item, i) => (
                           <li key={i} className="flex items-start gap-3">
                              <div className="mt-3 w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS.orange }} />
-                             {item}
+                             <h3 className="font-normal text-2xl md:text-3xl">{item}</h3>
                           </li>
                         ))}
                      </ul>
                      <div className="mt-8 flex items-start gap-4 p-6 bg-[#1B1B1B] rounded-xl border border-white/10">
                         <Info className="flex-shrink-0 mt-1" size={32} color={COLORS.neonTeal} />
-                        <p className="text-2xl md:text-3xl italic text-gray-300">
+                        <h3 className="text-2xl md:text-3xl italic text-gray-300 font-normal">
                           In the next lessons, you will explore the ideas of social conditioning, leaps of faith, belief, knowledge, and what — within the context of being an independent and critical thinker — is considered the foundation for Jewish thought.
-                        </p>
+                        </h3>
                      </div>
                   </div>
                 </div>
@@ -329,10 +350,10 @@ const App = () => {
               
               {/* Question 1 */}
               <div className="mb-12">
-                <p className="font-bold mb-6 text-2xl md:text-3xl">
+                <h3 className="font-bold mb-6 text-2xl md:text-3xl">
                   <span className="opacity-50 mr-3">Q1:</span>
                   True or False: Following the crowd can sometimes prevent independent thinking because you may rely on others to interpret a situation instead of forming your own view.
-                </p>
+                </h3>
                 <div className="flex flex-col gap-4">
                   {['True', 'False'].map((opt) => (
                     <button
@@ -366,10 +387,10 @@ const App = () => {
 
               {/* Question 2 */}
               <div className="mb-6">
-                <p className="font-bold mb-6 text-2xl md:text-3xl">
+                <h3 className="font-bold mb-6 text-2xl md:text-3xl">
                   <span className="opacity-50 mr-3">Q2:</span>
                   You come up with a strong initial explanation for why something happened, but you want to avoid jumping to conclusions. What’s the best way to think more critically about it?
-                </p>
+                </h3>
                 <div className="space-y-4">
                   {[
                     "Ask yourself what assumptions you’re making and whether the evidence actually supports them",
