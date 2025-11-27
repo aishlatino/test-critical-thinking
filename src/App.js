@@ -21,6 +21,9 @@ const App = () => {
   const [review1Response, setReview1Response] = useState(null); // boolean
   const [review2Response, setReview2Response] = useState(null); // index
 
+  // --- Refs for Auto-scrolling ---
+  const textSection1Ref = useRef(null);
+  const feedbackSection2Ref = useRef(null);
   const bottomRef = useRef(null);
 
   // --- Handlers ---
@@ -37,6 +40,26 @@ const App = () => {
     setAl2Submitted(true);
   };
 
+  // --- Auto-scroll Effects ---
+  
+  // Scroll to Text Section 1 when Question 1 is answered
+  useEffect(() => {
+    if (al1Response && textSection1Ref.current) {
+      setTimeout(() => {
+        textSection1Ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
+    }
+  }, [al1Response]);
+
+  // Scroll to Feedback Section when Question 2 is submitted
+  useEffect(() => {
+    if (al2Submitted && feedbackSection2Ref.current) {
+      setTimeout(() => {
+        feedbackSection2Ref.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 300);
+    }
+  }, [al2Submitted]);
+
   // Scroll to bottom when "Next Lesson" appears
   useEffect(() => {
     if (review2Response !== null && bottomRef.current) {
@@ -45,10 +68,12 @@ const App = () => {
   }, [review2Response]);
 
   return (
-    <div className="min-h-screen font-sans text-white p-2 md:p-8 flex justify-center items-start" style={{ backgroundColor: COLORS.graphite }}>
+    // Changed p-2 md:p-8 to p-0 md:p-8 to fill screen on mobile
+    <div className="min-h-screen font-sans text-white p-0 md:p-8 flex justify-center items-start" style={{ backgroundColor: COLORS.graphite }}>
       
       {/* Main Container "Pop-up" Card */}
-      <div className="w-full max-w-2xl rounded-2xl md:rounded-3xl shadow-2xl overflow-hidden animate-fade-in-up" style={{ backgroundColor: COLORS.grey }}>
+      {/* Changed rounded-2xl to rounded-none md:rounded-3xl so it's square on mobile */}
+      <div className="w-full max-w-2xl min-h-screen md:min-h-0 rounded-none md:rounded-3xl shadow-2xl overflow-hidden animate-fade-in-up" style={{ backgroundColor: COLORS.grey }}>
         
         {/* Header */}
         <header className="p-6 md:p-8 pb-4">
@@ -85,7 +110,7 @@ const App = () => {
               <h2 className="text-xl font-bold">Question 1</h2>
             </div>
             
-            <p className="text-lg leading-relaxed text-gray-200">
+            <p className="text-lg md:text-xl leading-relaxed text-gray-200">
               If you were the student in the video, would you report the smoke or continue taking the survey?
             </p>
 
@@ -99,7 +124,7 @@ const App = () => {
                   borderColor: al1Response === 'report' ? COLORS.neonTeal : undefined
                 }}
               >
-                <span className="font-bold">A.</span> Report the smoke
+                <span className="font-bold text-lg">A.</span> <span className="text-lg">Report the smoke</span>
               </button>
               <button 
                 onClick={() => setAl1Response('continue')}
@@ -110,37 +135,42 @@ const App = () => {
                   borderColor: al1Response === 'continue' ? COLORS.neonTeal : undefined
                 }}
               >
-                <span className="font-bold">B.</span> Continue taking the survey
+                <span className="font-bold text-lg">B.</span> <span className="text-lg">Continue taking the survey</span>
               </button>
             </div>
           </section>
 
           {/* Textual Section 1 */}
           {al1Response && (
-            <section className="animate-fade-in space-y-6 bg-black/20 p-5 md:p-6 rounded-2xl border-l-4" style={{ borderColor: COLORS.orange }}>
-              <p className="font-semibold text-lg">
+            <section 
+              ref={textSection1Ref}
+              className="animate-fade-in space-y-6 bg-black/20 p-5 md:p-6 rounded-2xl border-l-4" 
+              style={{ borderColor: COLORS.orange }}
+            >
+              <p className="font-semibold text-lg md:text-xl">
                 Don’t be surprised, but the actual answer isn’t so simple.
               </p>
-              <p className="leading-relaxed opacity-90 text-sm md:text-base">
+              {/* Increased font size for mobile text */}
+              <p className="leading-relaxed opacity-90 text-lg">
                 According to a famous study known as the Smoke Filled Room Experiment, your response would depend on a) whether or not you are alone in the room and b) assuming you’re not alone, whether or not the other participants are also wondering what to do.
               </p>
               
-              <div className="space-y-2 pl-2 md:pl-4 text-sm md:text-base">
-                <p className="text-xs md:text-sm uppercase tracking-wider font-bold" style={{ color: COLORS.mutedTeal }}>In the original experiment:</p>
-                <ul className="list-disc pl-5 space-y-1 opacity-90">
+              <div className="space-y-2 pl-2 md:pl-4 text-lg">
+                <p className="text-sm md:text-base uppercase tracking-wider font-bold" style={{ color: COLORS.mutedTeal }}>In the original experiment:</p>
+                <ul className="list-disc pl-5 space-y-2 opacity-90">
                   <li>When alone in the room, 75% of participants reported smoke</li>
                   <li>When seated with two other participants, 38% reported smoke</li>
                   <li>When seated with two people the researchers instructed not to respond, only 10% reported smoke</li>
                 </ul>
               </div>
 
-              <p className="leading-relaxed opacity-90 text-sm md:text-base">
+              <p className="leading-relaxed opacity-90 text-lg">
                 Those findings demonstrate that most people need social proof, they look to others when deciding how to interpret a situation; and that leads to a diffusion of responsibility, meaning they won’t act before someone else does (also called “Bystander Effect”).
               </p>
-              <p className="font-medium" style={{ color: COLORS.orange }}>
+              <p className="font-medium text-lg" style={{ color: COLORS.orange }}>
                 That doesn’t bode well for independent thinking.
               </p>
-              <p className="leading-relaxed opacity-90 text-sm md:text-base">
+              <p className="leading-relaxed opacity-90 text-lg">
                 Independent thinking is the ability to form your own ideas as opposed to adopting the views of others, and, as you will learn later in this unit, is intrinsic to living a Jewish life.
               </p>
             </section>
@@ -156,9 +186,9 @@ const App = () => {
                 <h2 className="text-xl font-bold">Question 2</h2>
               </div>
               
-              <p className="text-lg leading-relaxed text-gray-200">
+              <p className="text-lg md:text-xl leading-relaxed text-gray-200">
                 Even if you’re an independent thinker, how do you know you’re right? <br/>
-                <span className="text-sm opacity-60 font-normal">[Choose all that apply]</span>
+                <span className="text-base opacity-60 font-normal">[Choose all that apply]</span>
               </p>
 
               <div className="space-y-3 mt-4">
@@ -216,7 +246,7 @@ const App = () => {
                           )
                         )}
                       </div>
-                      <span className="flex-1 text-sm md:text-base">{option}</span>
+                      <span className="flex-1 text-lg">{option}</span>
                       {al2Submitted && isCorrectOption && isSelected && <span className="text-xs font-bold text-green-400 flex-shrink-0 mt-1 md:mt-0">GOOD</span>}
                       {al2Submitted && !isCorrectOption && isSelected && <span className="text-xs font-bold text-red-400 flex-shrink-0 mt-1 md:mt-0">OPS</span>}
                     </button>
@@ -228,30 +258,30 @@ const App = () => {
                 <button 
                   onClick={handleAl2Submit}
                   disabled={al2Selections.length === 0}
-                  className="w-full md:w-auto px-8 py-3 rounded-full font-bold mt-4 transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full md:w-auto px-8 py-3 rounded-full font-bold text-lg mt-4 transition-transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ backgroundColor: COLORS.orange, color: 'white' }}
                 >
                   Check Answers
                 </button>
               ) : (
-                <div className="mt-6 animate-fade-in">
+                <div ref={feedbackSection2Ref} className="mt-6 animate-fade-in">
                   <div className="bg-black/20 p-5 md:p-6 rounded-2xl border-l-4 space-y-4" style={{ borderColor: COLORS.neonTeal }}>
-                    <p className="font-semibold text-sm md:text-base">
+                    <p className="font-semibold text-lg md:text-xl">
                       If you chose answers A, B, or C, you’re on the right track, as opposed to D, which is maybe just a testament to your rebellious nature (not necessarily a bad thing, but also not necessarily an indicator of truthfulness).
                     </p>
-                    <p className="leading-relaxed opacity-90 text-sm md:text-base">
+                    <p className="leading-relaxed opacity-90 text-lg">
                       The point here is that in addition to being an independent thinker, you also want to be a critical thinker.
                     </p>
                     <div className="p-4 rounded-xl bg-white/5 border border-white/10">
-                      <p className="font-bold mb-2" style={{ color: COLORS.mutedTeal }}>Critical Thinking</p>
-                      <p className="text-sm opacity-80">
+                      <p className="font-bold mb-2 text-lg" style={{ color: COLORS.mutedTeal }}>Critical Thinking</p>
+                      <p className="text-lg opacity-80">
                         The ability to analyze ideas, claims, and information; to evaluate evidence, spot assumptions, and test logic. You judge the veracity of whatever it is you’re examining.
                       </p>
                     </div>
-                    <p className="leading-relaxed opacity-90 text-sm md:text-base">
+                    <p className="leading-relaxed opacity-90 text-lg">
                       With that in mind, in this unit, you will learn that, as a Jew, you are expected to be both an independent and critical thinker. That means:
                     </p>
-                    <ul className="list-disc pl-5 space-y-1 opacity-90 text-sm">
+                    <ul className="list-disc pl-5 space-y-2 opacity-90 text-lg">
                       <li>Being comfortable asking uncomfortable questions</li>
                       <li>Being independent-minded</li>
                       <li>Gathering evidence, taking logical steps, and coming to conclusions on your own</li>
@@ -259,10 +289,10 @@ const App = () => {
                   </div>
                   
                   <div className="mt-8 p-5 md:p-6 bg-gradient-to-br from-white/5 to-transparent rounded-2xl border border-white/5">
-                     <p className="mb-4 text-sm md:text-base">
+                     <p className="mb-4 text-lg">
                        Both independent and critical thinking have starring roles in Jewish scholarship and tradition, and in this unit you will discover that those ways of thinking are:
                      </p>
-                     <ul className="space-y-3 text-sm opacity-80">
+                     <ul className="space-y-3 text-lg opacity-80">
                         {[
                           "The point of the first of the Ten Commandments",
                           "Taken as a given when Jewish ideas are taught and explained",
@@ -271,14 +301,14 @@ const App = () => {
                           "An important part of living a Jewish life"
                         ].map((item, i) => (
                           <li key={i} className="flex items-start gap-2">
-                             <div className="mt-1.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS.orange }} />
+                             <div className="mt-2.5 w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: COLORS.orange }} />
                              {item}
                           </li>
                         ))}
                      </ul>
                      <div className="mt-6 flex items-start gap-3 p-4 bg-[#1B1B1B] rounded-xl border border-white/10">
-                        <Info className="flex-shrink-0 mt-1" size={20} color={COLORS.neonTeal} />
-                        <p className="text-sm italic text-gray-300">
+                        <Info className="flex-shrink-0 mt-1" size={24} color={COLORS.neonTeal} />
+                        <p className="text-lg italic text-gray-300">
                           In the next lessons, you will explore the ideas of social conditioning, leaps of faith, belief, knowledge, and what — within the context of being an independent and critical thinker — is considered the foundation for Jewish thought.
                         </p>
                      </div>
@@ -295,7 +325,7 @@ const App = () => {
               
               {/* Question 1 */}
               <div className="mb-10">
-                <p className="font-semibold mb-4 text-lg">
+                <p className="font-semibold mb-4 text-lg md:text-xl">
                   <span className="opacity-50 mr-2">Q1:</span>
                   True or False: Following the crowd can sometimes prevent independent thinking because you may rely on others to interpret a situation instead of forming your own view.
                 </p>
@@ -305,7 +335,7 @@ const App = () => {
                       key={opt}
                       onClick={() => setReview1Response(opt === 'True')}
                       disabled={review1Response !== null}
-                      className={`px-6 py-3 rounded-lg font-medium border transition-all
+                      className={`px-6 py-4 text-lg rounded-lg font-medium border transition-all
                         ${review1Response === null 
                           ? 'border-white/20 hover:border-white/50 bg-transparent' 
                           : (opt === 'True' && review1Response === true) || (opt === 'True' && review1Response === false) // Correct answer is True
@@ -321,7 +351,7 @@ const App = () => {
                   ))}
                 </div>
                 {review1Response !== null && (
-                  <div className={`mt-3 p-3 rounded-lg text-sm flex items-center gap-2 ${review1Response ? 'bg-green-900/30 text-green-300' : 'bg-green-900/30 text-green-300'}`}>
+                  <div className={`mt-3 p-4 rounded-lg text-lg flex items-center gap-3 ${review1Response ? 'bg-green-900/30 text-green-300' : 'bg-green-900/30 text-green-300'}`}>
                     {review1Response 
                       ? "Yes, that’s true. Following the crowd could be an impediment to independent thought." 
                       : "Nope, it’s true. Following the crowd could be an impediment to independent thought."
@@ -332,7 +362,7 @@ const App = () => {
 
               {/* Question 2 */}
               <div className="mb-4">
-                <p className="font-semibold mb-4 text-lg">
+                <p className="font-semibold mb-4 text-lg md:text-xl">
                   <span className="opacity-50 mr-2">Q2:</span>
                   You come up with a strong initial explanation for why something happened, but you want to avoid jumping to conclusions. What’s the best way to think more critically about it?
                 </p>
@@ -361,8 +391,8 @@ const App = () => {
                         disabled={review2Response !== null}
                         className={`w-full p-4 text-left rounded-xl border transition-all flex items-start md:items-center ${btnStyle}`}
                       >
-                        <span className="font-bold mr-3 opacity-50 pt-1 md:pt-0">{String.fromCharCode(65 + idx)}.</span>
-                        <span className="text-sm md:text-base">{option}</span>
+                        <span className="font-bold mr-3 opacity-50 pt-1 md:pt-0 text-lg">{String.fromCharCode(65 + idx)}.</span>
+                        <span className="text-lg">{option}</span>
                       </button>
                     );
                   })}
@@ -370,10 +400,10 @@ const App = () => {
                 {review2Response !== null && (
                   <div className={`mt-4 p-4 rounded-lg flex gap-3 ${review2Response === 0 ? 'bg-green-900/20 border border-green-500/30' : 'bg-red-900/20 border border-red-500/30'}`}>
                      {review2Response === 0 
-                       ? <Check className="text-green-400 flex-shrink-0" />
-                       : <X className="text-red-400 flex-shrink-0" />
+                       ? <Check className="text-green-400 flex-shrink-0" size={24} />
+                       : <X className="text-red-400 flex-shrink-0" size={24} />
                      }
-                     <p className="text-sm">
+                     <p className="text-lg">
                        {review2Response === 0
                          ? "Excellent! Look at your assumptions and see if the evidence supports them."
                          : "Close, the correct answer is A. Ask yourself what assumptions you’re making and whether the evidence actually supports them."
